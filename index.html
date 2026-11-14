@@ -2,603 +2,540 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Native Lab | OpenShift</title>
 
-    <title>Cloud Native Lab | OpenShift Dashboard</title>
+<style>
+* { box-sizing: border-box; }
 
-    <style>
-        * { box-sizing: border-box; }
+body {
+    margin: 0;
+    padding: 30px 16px;
+    font-family: Arial, sans-serif;
+    background: #0b1120;
+    color: #e2e8f0;
+}
 
-        body {
-            margin: 0;
-            padding: 30px 16px;
-            font-family: Arial, sans-serif;
-            background: #0b1120;
-            color: #e2e8f0;
-        }
+.container {
+    max-width: 900px;
+    margin: auto;
+}
 
-        .container {
-            max-width: 850px;
-            margin: auto;
-        }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 20px;
+}
 
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #334155;
-        }
+.brand {
+    color: #38bdf8;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
 
-        .brand {
-            color: #38bdf8;
-            font-weight: bold;
-            font-size: 14px;
-            letter-spacing: 2px;
-        }
+.badge {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+}
 
-        .badge {
-            background: #064e3b;
-            color: #6ee7b7;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
+.hero {
+    text-align: center;
+    padding: 30px 0;
+}
 
-        .hero {
-            text-align: center;
-            padding: 30px 0;
-        }
+h1 {
+    color: #38bdf8;
+    font-size: clamp(28px, 5vw, 44px);
+    margin: 10px 0;
+}
 
-        h1 {
-            color: #38bdf8;
-            font-size: clamp(28px, 5vw, 42px);
-            margin: 10px 0;
-        }
+h2 {
+    color: #38bdf8;
+    font-size: 18px;
+    margin-top: 0;
+}
 
-        p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
+p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
 
-        .panel {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
+.panel {
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
 
-        .clock {
-            text-align: center;
-        }
+.clock {
+    text-align: center;
+}
 
-        .label {
-            color: #94a3b8;
-            font-size: 12px;
-            letter-spacing: 1.5px;
-        }
+.label {
+    color: #94a3b8;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+}
 
-        #time {
-            font-family: monospace;
-            font-size: 42px;
-            margin: 10px 0;
-        }
+#time {
+    font-family: monospace;
+    font-size: 44px;
+    margin: 10px 0;
+}
 
-        #date, #timezone {
-            color: #94a3b8;
-            font-size: 14px;
-        }
+#date, #timezone {
+    color: #94a3b8;
+    font-size: 14px;
+    margin: 5px 0;
+}
 
-        #timezone {
-            margin-top: 6px;
-            font-size: 12px;
-        }
+.pod-panel {
+    background: #064e3b;
+    border: 1px solid #059669;
+    border-radius: 12px;
+    padding: 26px;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        .pod-panel {
-            background: #064e3b;
-            border: 1px solid #059669;
-            border-radius: 12px;
-            padding: 26px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.pod-label {
+    color: #a7f3d0;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
 
-        .pod-label {
-            color: #a7f3d0;
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
+.pod-name {
+    color: white;
+    font-family: monospace;
+    font-size: 22px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+    margin: 15px 0;
+}
 
-        .pod-name {
-            color: white;
-            font-family: monospace;
-            font-size: 20px;
-            font-weight: bold;
-            overflow-wrap: anywhere;
-            margin: 15px 0;
-        }
+.pod-hint {
+    color: #6ee7b7;
+    font-size: 12px;
+}
 
-        .pod-hint {
-            color: #6ee7b7;
-            font-size: 12px;
-        }
+button {
+    background: #38bdf8;
+    color: #0b1120;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 18px;
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+button:hover {
+    background: #7dd3fc;
+}
 
-        .card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 22px 12px;
-            text-align: center;
-        }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
-        .card-icon {
-            color: #38bdf8;
-            font-size: 28px;
-        }
+.card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px 12px;
+    text-align: center;
+}
 
-        .card h3 {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: normal;
-        }
+.card-icon {
+    color: #38bdf8;
+    font-size: 28px;
+}
 
-        .card strong {
-            font-size: 16px;
-        }
+.card h3 {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: normal;
+}
 
-        h2 {
-            color: #38bdf8;
-            font-size: 18px;
-            margin-top: 0;
-        }
+.card strong {
+    font-size: 16px;
+}
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 13px 0;
-            border-bottom: 1px solid #1e293b;
-            font-size: 14px;
-        }
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 14px;
+}
 
-        .info-label {
-            color: #94a3b8;
-        }
+.info-label {
+    color: #94a3b8;
+}
 
-        .info-value {
-            color: #6ee7b7;
-            font-family: monospace;
-            text-align: right;
-            overflow-wrap: anywhere;
-            min-width: 0;
-        }
+.info-value {
+    color: #6ee7b7;
+    font-family: monospace;
+    text-align: right;
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
 
-        a {
-            color: #38bdf8;
-            text-decoration: none;
-        }
+a {
+    color: #38bdf8;
+    text-decoration: none;
+}
 
-        a:hover {
-            text-decoration: underline;
-        }
+a:hover {
+    text-decoration: underline;
+}
 
-        .pipeline {
-            text-align: center;
-            padding: 18px;
-            background: #1e293b;
-            border-radius: 10px;
-            color: #38bdf8;
-            font-size: 13px;
-            line-height: 2;
-        }
+.pipeline {
+    text-align: center;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    color: #38bdf8;
+    font-size: 13px;
+    line-height: 2;
+}
 
-        .refresh {
-            background: #0ea5e9;
-            color: #0b1120;
-            border: 0;
-            border-radius: 8px;
-            padding: 12px 22px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 18px;
-        }
+footer {
+    color: #64748b;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+}
 
-        .refresh:hover {
-            background: #38bdf8;
-        }
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
 
-        footer {
-            text-align: center;
-            color: #64748b;
-            font-size: 12px;
-            margin-top: 30px;
-        }
+    .info-row {
+        flex-direction: column;
+        gap: 6px;
+    }
 
-        @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
+    .info-value {
+        text-align: left;
+    }
 
-            .info-row {
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .info-value {
-                text-align: left;
-            }
-
-            .pod-name {
-                font-size: 16px;
-            }
-        }
-    </style>
+    .pod-name {
+        font-size: 16px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <header>
-        <div class="brand">CLOUD NATIVE LAB</div>
-        <div class="badge">● ONLINE</div>
-    </header>
+<header>
+    <div class="brand">CLOUD NATIVE LAB</div>
+    <div class="badge">● ONLINE</div>
+</header>
 
-    <section class="hero">
-        <h1>OpenShift Deployment Dashboard</h1>
+<section class="hero">
+    <h1>OpenShift Deployment Dashboard</h1>
+    <p>
+        My Cloud Native Learning Environment.
+        Building, deploying and scaling applications
+        on Red Hat OpenShift.
+    </p>
+</section>
 
-        <p>
-            My Cloud Native Learning Environment.
-            Building, deploying and scaling applications
-            on Red Hat OpenShift.
-        </p>
-    </section>
+<!-- LIVE CLOCK -->
 
-    <!-- CURRENT DATE AND TIME -->
+<section class="panel clock">
+    <div class="label">CURRENT DATE & TIME</div>
+    <div id="time">--:--:--</div>
+    <div id="date">Loading...</div>
+    <div id="timezone"></div>
+</section>
 
-    <section class="panel clock">
-        <div class="label">CURRENT DATE & TIME</div>
+<!-- CURRENT POD -->
 
-        <div id="time">--:--:--</div>
+<section class="pod-panel">
+    <div class="pod-label">CURRENTLY SERVED BY POD</div>
 
-        <div id="date">Loading date...</div>
+    <div class="pod-name" id="pod-name">__POD_NAME__</div>
 
-        <div id="timezone"></div>
-    </section>
+    <div class="pod-hint">
+        Refresh the application to test load balancing.
+    </div>
 
-    <!-- RUNTIME: CURRENT POD -->
+    <button onclick="refreshPage()">
+        Refresh Application
+    </button>
+</section>
 
-    <section class="pod-panel">
+<!-- TECHNOLOGY STACK -->
 
-        <div class="pod-label">
-            CURRENTLY SERVED BY POD
-        </div>
+<section class="grid">
+    <div class="card">
+        <div class="card-icon">☁</div>
+        <h3>Platform</h3>
+        <strong>OpenShift</strong>
+    </div>
 
-        <div class="pod-name" id="pod-name">
-            __POD_NAME__
-        </div>
+    <div class="card">
+        <div class="card-icon">▤</div>
+        <h3>Web Server</h3>
+        <strong>Apache HTTPD</strong>
+    </div>
 
-        <div class="pod-hint">
-            Refresh the page to test load balancing
-            across application replicas.
-        </div>
+    <div class="card">
+        <div class="card-icon">⬡</div>
+        <h3>Orchestration</h3>
+        <strong>Kubernetes</strong>
+    </div>
+</section>
 
-        <button class="refresh"
-                onclick="refreshPage()">
-            Refresh Application
-        </button>
+<!-- RUNTIME INFORMATION -->
 
-    </section>
+<section class="panel">
+    <h2>Runtime Information</h2>
 
-    <!-- TECHNOLOGY STACK -->
+    <div class="info-row">
+        <span class="info-label">Pod Name</span>
+        <span class="info-value">__POD_NAME__</span>
+    </div>
 
-    <section class="grid">
+    <div class="info-row">
+        <span class="info-label">Pod IP</span>
+        <span class="info-value">__POD_IP__</span>
+    </div>
 
-        <div class="card">
-            <div class="card-icon">☁</div>
-            <h3>Platform</h3>
-            <strong>OpenShift</strong>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Namespace</span>
+        <span class="info-value">__POD_NAMESPACE__</span>
+    </div>
 
-        <div class="card">
-            <div class="card-icon">▤</div>
-            <h3>Web Server</h3>
-            <strong>Apache HTTPD</strong>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Node Name</span>
+        <span class="info-value">__NODE_NAME__</span>
+    </div>
 
-        <div class="card">
-            <div class="card-icon">⬡</div>
-            <h3>Orchestration</h3>
-            <strong>Kubernetes</strong>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Runtime Initialized</span>
+        <span class="info-value">__START_TIME__</span>
+    </div>
+</section>
 
-    </section>
+<!-- DEPLOYMENT INFORMATION -->
 
-    <!-- DEPLOYMENT INFORMATION -->
+<section class="panel">
+    <h2>Deployment Information</h2>
 
-    <section class="panel">
+    <div class="info-row">
+        <span class="info-label">Deployment</span>
+        <span class="info-value">httpd-sample</span>
+    </div>
 
-        <h2>Deployment Information</h2>
+    <div class="info-row">
+        <span class="info-label">Application Version</span>
+        <span class="info-value" id="version">v1.0.0</span>
+    </div>
 
-        <div class="info-row">
-            <span class="info-label">Deployment</span>
-            <span class="info-value">httpd-sample</span>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Container Port</span>
+        <span class="info-value">8080</span>
+    </div>
 
-        <div class="info-row">
-            <span class="info-label">Namespace</span>
-            <span class="info-value">
-                ddavila-k8s-dev
-            </span>
-        </div>
+    <div class="info-row">
+        <span class="info-label">ImageStream</span>
+        <span class="info-value">httpd-sample</span>
+    </div>
 
-        <div class="info-row">
-            <span class="info-label">
-                Application Version
-            </span>
+    <div class="info-row">
+        <span class="info-label">Application URL</span>
+        <span class="info-value" id="app-url">Loading...</span>
+    </div>
+</section>
 
-            <span class="info-value" id="version">
-                v1.0.0
-            </span>
-        </div>
+<!-- SOURCE AND BUILD INFORMATION -->
 
-        <div class="info-row">
-            <span class="info-label">
-                Image Build Date
-            </span>
+<section class="panel">
+    <h2>Source & Build Information</h2>
 
-            <span class="info-value" id="build-date">
-                Pending build metadata
-            </span>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Source Repository</span>
+        <span class="info-value">
+            <a id="repo-link"
+               target="_blank"
+               rel="noopener noreferrer">
+                openshiift-apache-lab
+            </a>
+        </span>
+    </div>
 
-        <div class="info-row">
-            <span class="info-label">
-                Container Port
-            </span>
+    <div class="info-row">
+        <span class="info-label">Git Branch</span>
+        <span class="info-value" id="branch">main</span>
+    </div>
 
-            <span class="info-value">8080</span>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Build Commit</span>
+        <span class="info-value" id="commit">
+            Pending build metadata
+        </span>
+    </div>
 
-        <div class="info-row">
-            <span class="info-label">
-                Application URL
-            </span>
+    <div class="info-row">
+        <span class="info-label">Image Build Date</span>
+        <span class="info-value" id="build-date">
+            Pending build metadata
+        </span>
+    </div>
 
-            <span class="info-value" id="app-url">
-                Loading...
-            </span>
-        </div>
+    <div class="info-row">
+        <span class="info-label">Build Strategy</span>
+        <span class="info-value" id="strategy">
+            Source-to-Image (S2I)
+        </span>
+    </div>
+</section>
 
-    </section>
+<section class="pipeline">
+    GitHub → BuildConfig → Image Registry
+    → Deployment → Pods
+</section>
 
-    <!-- SOURCE CODE AND BUILD -->
-
-    <section class="panel">
-
-        <h2>Source & Build Information</h2>
-
-        <div class="info-row">
-            <span class="info-label">
-                Source Repository
-            </span>
-
-            <span class="info-value">
-                <a id="repo-link"
-                   href="#"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    openshiift-apache-lab
-                </a>
-            </span>
-        </div>
-
-        <div class="info-row">
-            <span class="info-label">Git Branch</span>
-
-            <span class="info-value" id="branch">
-                main
-            </span>
-        </div>
-
-        <div class="info-row">
-            <span class="info-label">Build Commit</span>
-
-            <span class="info-value" id="commit">
-                Pending build metadata
-            </span>
-        </div>
-
-        <div class="info-row">
-            <span class="info-label">
-                Build Strategy
-            </span>
-
-            <span class="info-value" id="strategy">
-                Source-to-Image (S2I)
-            </span>
-        </div>
-
-        <div class="info-row">
-            <span class="info-label">ImageStream</span>
-
-            <span class="info-value">
-                httpd-sample
-            </span>
-        </div>
-
-    </section>
-
-    <!-- CI/CD PIPELINE -->
-
-    <section class="pipeline">
-        GitHub
-        →
-        BuildConfig
-        →
-        Image Registry
-        →
-        Deployment
-        →
-        Pods
-    </section>
-
-    <footer>
-        Cloud Native Learning Journey · 2026
-    </footer>
+<footer>
+    Cloud Native Learning Journey · 2026
+</footer>
 
 </div>
 
 <script>
 
-    // APPLICATION CONFIGURATION
-    // Replace TU-USUARIO with your GitHub username.
+// APPLICATION CONFIGURATION
 
-    const config = {
-        repository:
-            "https://github.com/da2bit/openshiift-apache-lab",
-        branch: "main",
-        version: "v1.0.0"
-    };
+const config = {
+    repository:
+        "https://github.com/TU-USUARIO/openshiift-apache-lab",
+    branch: "main",
+    version: "v1.0.0"
+};
 
-    const repoLink =
-        document.getElementById("repo-link");
+document.getElementById("repo-link").href =
+    config.repository;
 
-    repoLink.href = config.repository;
+document.getElementById("branch").textContent =
+    config.branch;
 
-    document.getElementById("branch").textContent =
-        config.branch;
+document.getElementById("version").textContent =
+    config.version;
 
-    document.getElementById("version").textContent =
-        config.version;
+document.getElementById("app-url").textContent =
+    window.location.origin;
 
-    document.getElementById("app-url").textContent =
-        window.location.origin;
+// LIVE CLOCK
 
-    // LIVE DATE AND TIME
+function updateClock() {
+    const now = new Date();
 
-    function updateClock() {
+    document.getElementById("time").textContent =
+        now.toLocaleTimeString("en-GB");
 
-        const now = new Date();
+    document.getElementById("date").textContent =
+        now.toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
 
-        document.getElementById("time").textContent =
-            now.toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit"
-            });
+    document.getElementById("timezone").textContent =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
 
-        document.getElementById("date").textContent =
-            now.toLocaleDateString("en-GB", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-            });
+updateClock();
+setInterval(updateClock, 1000);
 
-        document.getElementById("timezone").textContent =
-            Intl.DateTimeFormat()
-                .resolvedOptions().timeZone;
-    }
+// REFRESH APPLICATION
 
-    updateClock();
-    setInterval(updateClock, 1000);
+function refreshPage() {
+    const url = new URL(window.location.href);
+    url.searchParams.set("refresh", Date.now());
+    window.location.href = url.toString();
+}
 
-    // POD INFORMATION
+// HANDLE MISSING RUNTIME METADATA
 
-    const podName =
-        document.getElementById("pod-name");
+document.querySelectorAll(".info-value, .pod-name")
+    .forEach(element => {
+        const value = element.textContent.trim();
 
-    if (podName.textContent.trim() === "__POD_NAME__") {
+        if (/^__[A-Z_]+__$/.test(value)) {
+            element.textContent = "Not configured";
+        }
+    });
 
-        podName.textContent =
-            "Runtime metadata not configured";
+// OPTIONAL BUILD METADATA
 
-    }
-
-    // REFRESH APPLICATION
-    // Adds a timestamp to reduce browser caching.
-
-    function refreshPage() {
-
-        const url = new URL(window.location.href);
-
-        url.searchParams.set(
-            "refresh",
-            Date.now()
+async function loadBuildInfo() {
+    try {
+        const response = await fetch(
+            "./build-info.json",
+            { cache: "no-store" }
         );
 
-        window.location.href = url.toString();
-    }
+        if (!response.ok) return;
 
-    // OPTIONAL BUILD METADATA
+        const info = await response.json();
 
-    async function loadBuildInfo() {
-
-        try {
-
-            const response = await fetch(
-                "./build-info.json",
-                { cache: "no-store" }
-            );
-
-            if (!response.ok) return;
-
-            const info = await response.json();
-
-            if (info.repository) {
-                repoLink.href = info.repository;
-            }
-
-            if (info.branch) {
-                document.getElementById("branch")
-                    .textContent = info.branch;
-            }
-
-            if (info.commit) {
-                document.getElementById("commit")
-                    .textContent = info.commit;
-            }
-
-            if (info.buildDate) {
-                document.getElementById("build-date")
-                    .textContent = info.buildDate;
-            }
-
-            if (info.version) {
-                document.getElementById("version")
-                    .textContent = info.version;
-            }
-
-            if (info.strategy) {
-                document.getElementById("strategy")
-                    .textContent = info.strategy;
-            }
-
-        } catch (error) {
-
-            console.log(
-                "Build metadata not available yet."
-            );
-
+        if (info.repository) {
+            document.getElementById("repo-link").href =
+                info.repository;
         }
-    }
 
-    loadBuildInfo();
+        if (info.branch) {
+            document.getElementById("branch").textContent =
+                info.branch;
+        }
+
+        if (info.commit) {
+            document.getElementById("commit").textContent =
+                info.commit;
+        }
+
+        if (info.buildDate) {
+            document.getElementById("build-date").textContent =
+                info.buildDate;
+        }
+
+        if (info.version) {
+            document.getElementById("version").textContent =
+                info.version;
+        }
+
+        if (info.strategy) {
+            document.getElementById("strategy").textContent =
+                info.strategy;
+        }
+
+    } catch (error) {
+        console.log("Build metadata not available.");
+    }
+}
+
+loadBuildInfo();
 
 </script>
-
 </body>
 </html>
 
